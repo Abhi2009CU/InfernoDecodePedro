@@ -61,6 +61,6 @@ public class Turret {
     }
 
     public double getCurrentRotation() {
-        return encoderRefMotor.getCurrentPosition() / TICKS_PER_REV / GEAR_RATIO * 2 * Math.PI;
+        return -encoderRefMotor.getCurrentPosition() / TICKS_PER_REV / GEAR_RATIO * 2 * Math.PI;
     }
 }
