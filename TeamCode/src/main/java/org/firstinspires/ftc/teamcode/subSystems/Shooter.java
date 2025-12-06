@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.MyRobot;
 
 @Configurable
 public class Shooter {
-    public static double P = 0.2;
-    public static double I = 0.1;
+    public static double P = 0.3;
+    public static double I = 0.2;
     public static double D = 0.0;
 
     private Servo HOOD_SERVO;

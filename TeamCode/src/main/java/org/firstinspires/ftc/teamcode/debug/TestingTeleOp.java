@@ -25,7 +25,7 @@ public class TestingTeleOp extends OpMode {
         follower.update();
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
 
-        intakeMotor = new Motor(hardwareMap, "IntakeMotor");
+        intakeMotor = new Motor(hardwareMap, "Intake");
         intakeMotor.setRunMode(Motor.RunMode.RawPower);
         intakeMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
     }
