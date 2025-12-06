@@ -26,7 +26,7 @@ public class Launcher {
 
         private final double WAIT_TIME;
         InterpLUT hoodTable = new InterpLUT();
-        private double safePos;
+        private final double safePos;
 
         public SetHoodPosTask(RobotContext robotContext, double currentDistance) {
             super(robotContext);
