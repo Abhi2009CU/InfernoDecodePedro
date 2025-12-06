@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subSystems;
 
 import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.util.InterpLUT;
 import com.bylazar.configurables.annotations.Configurable;
 import com.jumpypants.murphy.util.RobotContext;
 import com.jumpypants.murphy.tasks.Task;
@@ -52,18 +53,29 @@ public class Shooter {
 
     public class SetHoodPosTask extends Task {
 
-        private final double DESIRED_POS;
         private final double WAIT_TIME;
+        InterpLUT hoodTable = new InterpLUT();
+        private final double safePos;
 
-        public SetHoodPosTask(RobotContext robotContext, double desiredPos) {
+        public SetHoodPosTask(RobotContext robotContext, double currentDistance) {
             super(robotContext);
-            DESIRED_POS = Math.max(0.0, Math.min(1.0, desiredPos));
-            WAIT_TIME = 0.1 * Math.abs(DESIRED_POS - HOOD_SERVO.getPosition());
+/*The points we add are like points on a scatter plot. The table/graph makes a "line of best fit"
+ so that for every distance we have a pos for the hood servo, that are calculated by the graph.*/
+
+            hoodTable.add(24, 0.8);
+            hoodTable.add(27, 0.6);
+            hoodTable.add(144, 0.3);
+            hoodTable.createLUT();
+
+            double calculatedPos = hoodTable.get(currentDistance);
+            safePos = Math.max(0.0, Math.min(1.0, calculatedPos));
+
+            WAIT_TIME = 0.1*Math.abs(safePos - HOOD_SERVO.getPosition());
         }
 
         @Override
         public void initialize(RobotContext robotContext) {
-            HOOD_SERVO.setPosition(DESIRED_POS);
+            HOOD_SERVO.setPosition(safePos);
         }
 
         @Override
@@ -71,6 +83,7 @@ public class Shooter {
             return ELAPSED_TIME.seconds() < WAIT_TIME;
         }
     }
+
 
     public class RunOuttakeTask extends Task {
 
