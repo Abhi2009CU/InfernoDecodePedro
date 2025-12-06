@@ -10,14 +10,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Transfer {
     private final Servo rightServo;
     private final Servo leftServo;
-    public static double LEFT_UP_POS = 1;
-    public static double RIGHT_UP_POS = 1;
-    public static double LEFT_DOWN_POS = 1;
-    public static double RIGHT_DOWN_POS = 1;
+    public static double LEFT_UP_POS = 0.5;
+    public static double RIGHT_UP_POS = 0.49;
+    public static double LEFT_DOWN_POS = 0.15;
+    public static double RIGHT_DOWN_POS = 0.83;
 
     public Transfer(HardwareMap hardwareMap){
-        rightServo = hardwareMap.get(Servo.class, "rightServo");
-        leftServo = hardwareMap.get(Servo.class, "leftServo");
+        rightServo = hardwareMap.get(Servo.class, "RightFlap");
+        leftServo = hardwareMap.get(Servo.class, "LeftFlap");
     }
 
     public class MoveLeftTask extends Task {
