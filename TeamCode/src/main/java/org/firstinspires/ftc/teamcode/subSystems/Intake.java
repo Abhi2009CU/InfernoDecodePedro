@@ -11,7 +11,7 @@ public class Intake {
     public final int MAXPOWER = 1, STOPPOWER = 0;
 
     public Intake(HardwareMap hardwareMap) {
-        INTAKE_MOTOR = new Motor(hardwareMap, "INTAKE_MOTOR");
+        INTAKE_MOTOR = new Motor(hardwareMap, "Intake");
         INTAKE_MOTOR.setRunMode(Motor.RunMode.RawPower);
         INTAKE_MOTOR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
