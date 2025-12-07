@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.subSystems;
 
 import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.arcrobotics.ftclib.util.InterpLUT;
 import com.bylazar.configurables.annotations.Configurable;
 import com.jumpypants.murphy.util.RobotContext;
 import com.jumpypants.murphy.tasks.Task;
@@ -21,11 +20,12 @@ public class Shooter {
 
     private double targetVelocity = 0.0;
 
-    public static final double maxVelocity = 1;
-    public static final double stopVelocity = 0;
+    public static double MAX_VELOCITY = 1;
+    public static double IDLE_VELOCITY = 0.5;
+    public static double STOP_VELOCITY = 0;
 
     public Shooter(HardwareMap hardwareMap) {
-//        HOOD_SERVO = hardwareMap.get(Servo.class, "Hood");
+        HOOD_SERVO = hardwareMap.get(Servo.class, "Hood");
 
         LEFT_WHEEL = new Motor(hardwareMap, "LeftShooter");
         RIGHT_WHEEL = new Motor(hardwareMap, "RightShooter");
@@ -41,6 +41,19 @@ public class Shooter {
 
     public void setVel(double vel) {
         targetVelocity = vel;
+    }
+
+    private static double calcHoodPos (double d) {
+        return d * 0.01 + 0.1;
+    }
+
+    public void setHoodByDistance(double distance) {
+        setHoodPosition(calcHoodPos(distance));
+    }
+
+    public void setHoodPosition(double position) {
+        double clampedPosition = Math.max(0.0, Math.min(1.0, position));
+        HOOD_SERVO.setPosition(clampedPosition);
     }
 
     public void updatePID() {
@@ -60,7 +73,6 @@ public class Shooter {
         public setVelocity(RobotContext robotContext, double vel){
             super(robotContext);
             setVel(vel);
-            updatePID();
         }
 
         @Override
@@ -72,37 +84,6 @@ public class Shooter {
             return false;
         }
     }
-    public class SetHoodPosTask extends Task {
-
-        private final double WAIT_TIME;
-        InterpLUT hoodTable = new InterpLUT();
-        private final double safePos;
-
-        public SetHoodPosTask(RobotContext robotContext, double currentDistance) {
-            super(robotContext);
-
-            hoodTable.add(24, 0.8);
-            hoodTable.add(27, 0.6);
-            hoodTable.add(144, 0.3);
-            hoodTable.createLUT();
-
-            double calculatedPos = hoodTable.get(currentDistance);
-            safePos = Math.max(0.0, Math.min(1.0, calculatedPos));
-
-            WAIT_TIME = 0.1*Math.abs(safePos - HOOD_SERVO.getPosition());
-        }
-
-        @Override
-        public void initialize(RobotContext robotContext) {
-            HOOD_SERVO.setPosition(safePos);
-        }
-
-        @Override
-        protected boolean run(RobotContext robotContext) {
-            return ELAPSED_TIME.seconds() < WAIT_TIME;
-        }
-    }
-
 
     public class RunOuttakeTask extends Task {
 

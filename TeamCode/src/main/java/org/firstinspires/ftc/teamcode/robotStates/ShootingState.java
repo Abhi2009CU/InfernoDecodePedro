@@ -19,14 +19,12 @@ public class ShootingState implements State {
     public ShootingState(MyRobot robotContext) {
         this.robotContext = robotContext;
 
-        mainTask = new SequentialTask(
-                robotContext,
+        mainTask = new SequentialTask(robotContext,
+                robotContext.SHOOTER.new setVelocity(robotContext, Shooter.MAX_VELOCITY),
                 new ParallelTask(robotContext, true,
-                        robotContext.Shooter.new SetHoodPosTask(robotContext, 0.75), //example hood position
-                        robotContext.Shooter.new setVelocity(robotContext, Shooter.maxVelocity)
-                ),
-                robotContext.TRANSFER.new TransferTask(robotContext),
-                robotContext.Shooter.new setVelocity(robotContext, Shooter.stopVelocity)
+                        robotContext.TRANSFER.new ManualControlTask(robotContext),
+                        robotContext.INTAKE.new ManualRunIntakeMotor(robotContext)
+                )
         );
     }
 
@@ -35,10 +33,10 @@ public class ShootingState implements State {
         Gamepad gamepad1 = robotContext.gamepad1;
 
         follower.setTeleOpDrive(
-                -gamepad1.left_stick_y,
-                -gamepad1.left_stick_x,
-                -gamepad1.right_stick_x,
-                false // Field Centric
+                Math.pow(-gamepad1.left_stick_y, 3),
+                Math.pow(-gamepad1.left_stick_x, 3),
+                Math.pow(-gamepad1.right_stick_x, 3),
+                false // field Centric
         );
 
         if (mainTask.step()) {

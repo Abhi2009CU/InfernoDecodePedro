@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.teamcode.MyRobot;
+import org.firstinspires.ftc.teamcode.subSystems.Shooter;
 import org.firstinspires.ftc.teamcode.subSystems.Turret;
 
 public class IntakingState implements State {
@@ -22,6 +23,7 @@ public class IntakingState implements State {
         this.robotContext = robotContext;
 
         mainTask = new SequentialTask(robotContext,
+                robotContext.SHOOTER.new setVelocity(robotContext, Shooter.IDLE_VELOCITY),
                 robotContext.INTAKE.new ManualRunIntakeMotor(robotContext)
         );
     }
@@ -32,10 +34,10 @@ public class IntakingState implements State {
         Gamepad gamepad1 = robotContext.gamepad1;
 
         follower.setTeleOpDrive(
-                -gamepad1.left_stick_y,
-                -gamepad1.left_stick_x,
-                -gamepad1.right_stick_x,
-                false // Field Centric
+                Math.pow(-gamepad1.left_stick_y, 3),
+                Math.pow(-gamepad1.left_stick_x, 3),
+                Math.pow(-gamepad1.right_stick_x, 3),
+                false // field Centric
         );
 
         if (mainTask.step()) {

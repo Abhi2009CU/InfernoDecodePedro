@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subSystems;
 
+import com.jumpypants.murphy.tasks.ParallelTask;
 import com.jumpypants.murphy.tasks.QueueTask;
 import com.jumpypants.murphy.tasks.Task;
 import com.jumpypants.murphy.util.RobotContext;
@@ -8,6 +9,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Transfer {
+    public static double FLAP_TIME_COEFFICIENT = 0.2;
+
     private final Servo rightFlap;
     private final Servo leftFlap;
     public static double LEFT_UP_POS = 0.5;
@@ -28,8 +31,7 @@ public class Transfer {
             super(robotContext);
             this.pos = pos;
             double currentPosition = leftFlap.getPosition();
-            double TIME_COEFFICIENT = 0.5;
-            estimatedTimeTaken = Math.abs(pos - currentPosition) * TIME_COEFFICIENT;
+            estimatedTimeTaken = Math.abs(pos - currentPosition) * FLAP_TIME_COEFFICIENT;
         }
 
         public void initialize(RobotContext robotContext){
@@ -50,8 +52,7 @@ public class Transfer {
             super(robotContext);
             this.pos = pos;
             double currentPosition = rightFlap.getPosition();
-            double TIME_COEFFICIENT = 0.5;
-            estimatedTimeTaken = Math.abs(pos - currentPosition) * TIME_COEFFICIENT;
+            estimatedTimeTaken = Math.abs(pos - currentPosition) * FLAP_TIME_COEFFICIENT;
         }
 
         public void initialize(RobotContext robotContext){
@@ -72,9 +73,6 @@ public class Transfer {
         }
 
         @Override
-        protected void initialize(RobotContext robotContext) {}
-
-        @Override
         protected boolean run(RobotContext robotContextWrapper) {
             super.run(robotContextWrapper);
 
@@ -90,9 +88,45 @@ public class Transfer {
                 this.addTask(robot.TRANSFER.new MoveLeftTask(robot, Transfer.LEFT_DOWN_POS));
             }
 
-            boolean running = this.step();
+            if (robot.gamepad1.aWasPressed()) {
+                this.addTask(new ParallelTask(robot, false,
+                        robot.TRANSFER.new MoveRightTask(robot, Transfer.RIGHT_UP_POS),
+                        robot.TRANSFER.new MoveLeftTask(robot, Transfer.LEFT_UP_POS)));
+                this.addTask(new ParallelTask(robot, false,
+                        robot.TRANSFER.new MoveRightTask(robot, Transfer.RIGHT_DOWN_POS),
+                        robot.TRANSFER.new MoveLeftTask(robot, Transfer.LEFT_DOWN_POS)));
+            }
 
-            return running;
+            return super.run(robotContextWrapper);
+        }
+    }
+
+    public class ManualControlTask extends Task {
+
+        public ManualControlTask(MyRobot robotContext) {
+            super(robotContext);
+        }
+
+        @Override
+        protected void initialize(RobotContext robotContext) {}
+
+        @Override
+        protected boolean run(RobotContext robotContextWrapper) {
+            MyRobot robot = (MyRobot) robotContextWrapper;
+
+            if (robot.gamepad1.right_bumper || robot.gamepad1.a) {
+                rightFlap.setPosition(Transfer.RIGHT_UP_POS);
+            } else {
+                rightFlap.setPosition(Transfer.RIGHT_DOWN_POS);
+            }
+
+            if (robot.gamepad1.left_bumper || robot.gamepad1.a) {
+                leftFlap.setPosition(Transfer.LEFT_UP_POS);
+            } else {
+                leftFlap.setPosition(Transfer.LEFT_DOWN_POS);
+            }
+
+            return !robot.gamepad1.dpadUpWasPressed();
         }
     }
 }

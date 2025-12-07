@@ -7,16 +7,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.MyRobot;
 public class Intake {
-    private final Motor IntakeMotor;
+    private final Motor INTAKE_MOTOR;
     public final int MAXPOWER = 1, STOPPOWER = 0;
 
-
-
-
     public Intake(HardwareMap hardwareMap) {
-        IntakeMotor = new Motor(hardwareMap, "IntakeMotor");
-        IntakeMotor.setRunMode(Motor.RunMode.RawPower);
-        IntakeMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        INTAKE_MOTOR = new Motor(hardwareMap, "INTAKE_MOTOR");
+        INTAKE_MOTOR.setRunMode(Motor.RunMode.RawPower);
+        INTAKE_MOTOR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
     }
 
@@ -31,7 +28,7 @@ public class Intake {
 
         @Override
         protected void initialize(RobotContext robotContext) {
-            IntakeMotor.set(POWER);
+            INTAKE_MOTOR.set(POWER);
         }
 
         @Override
@@ -43,32 +40,22 @@ public class Intake {
 
 
     public class ManualRunIntakeMotor extends Task {
-        private boolean buttonClick = false;
-        private boolean lastButtonState = false;
-
         public ManualRunIntakeMotor (RobotContext robotContext) {
             super(robotContext);
         }
 
         @Override
-        protected void initialize(RobotContext robotContext) {
-
-        }
+        protected void initialize(RobotContext robotContext) {}
 
         @Override
         protected boolean run(RobotContext robotContextWrapper) {
             MyRobot robotContext = (MyRobot) robotContextWrapper;
-            if (robotContext.gamepad1.x) {
-                IntakeMotor.set(MAXPOWER);
-            } else {
-                IntakeMotor.set(STOPPOWER);
-            }
 
-            if (robotContext.gamepad1.y) { //For when we want to stop intaking and start transfer
-                return false;
-            }
+            double intakePower = Math.max(-1.0, Math.min(1.0, robotContext.gamepad1.right_trigger - robotContext.gamepad1.left_trigger));
+            INTAKE_MOTOR.set(intakePower);
 
-            return true;
+            // For when we want to stop intaking and start transfer
+            return !robotContext.gamepad1.dpadUpWasPressed();
         }
     }
 }

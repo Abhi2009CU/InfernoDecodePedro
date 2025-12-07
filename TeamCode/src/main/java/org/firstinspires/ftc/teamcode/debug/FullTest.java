@@ -99,7 +99,6 @@ public class FullTest extends LinearOpMode {
 
             Pose currentPose = follower.getPose();
 
-            turret.getCurrentRotation();
             turret.setRotation(Turret.calculateGoalRotation( currentPose.getX(), currentPose.getY(), currentPose.getHeading(), targetX, targetY));
             turret.updatePID();
 

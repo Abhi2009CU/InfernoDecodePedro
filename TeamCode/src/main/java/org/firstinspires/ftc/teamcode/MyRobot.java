@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.subSystems.Turret;
 public class MyRobot extends RobotContext {
     public final Follower FOLLOWER;
     public final Intake INTAKE;
-    public final Shooter Shooter;
+    public final Shooter SHOOTER;
     public final Transfer TRANSFER;
     public final Turret TURRET;
 
@@ -35,7 +35,7 @@ public class MyRobot extends RobotContext {
         super(telemetry, gamepad1, gamepad2);
         this.FOLLOWER = follower;
         this.INTAKE = intake;
-        this.Shooter = shooter;
+        this.SHOOTER = shooter;
         this.TRANSFER = transfer;
         this.TURRET = turret;
 
