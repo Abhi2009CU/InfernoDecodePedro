@@ -44,8 +44,9 @@ public class ShooterPIDTuner extends LinearOpMode {
                 right.setPosition(0.9);
             }
 
-            telemetryM.debug("Current Velocity (ticks/s)", shooter.getVelocity());
-            telemetryM.debug("Target Velocity (ticks/s)", TARGET_VELOCITY);
+            telemetryM.addData("Current Velocity", shooter.getVelocity());
+            telemetryM.addData("Target Velocity", TARGET_VELOCITY);
+
 
             telemetryM.update();
         }
