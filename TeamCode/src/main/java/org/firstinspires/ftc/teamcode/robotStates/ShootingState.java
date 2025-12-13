@@ -6,8 +6,10 @@ import com.jumpypants.murphy.states.State;
 import com.jumpypants.murphy.tasks.ParallelTask;
 import com.jumpypants.murphy.tasks.SequentialTask;
 import com.jumpypants.murphy.tasks.Task;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.MainTeleOp;
 import org.firstinspires.ftc.teamcode.MyRobot;
 import org.firstinspires.ftc.teamcode.subSystems.Shooter;
 
@@ -29,6 +31,12 @@ public class ShootingState implements State {
 
     @Override
     public State step() {
+
+        Pose currentPose = MyRobot.follower.getPose();
+
+        double d = Math.sqrt(Math.pow(currentPose.getX() - MainTeleOp.TARGET_X, 2) + Math.pow(currentPose.getX() - MainTeleOp.TARGET_X, 2));
+
+        robotContext.SHOOTER.setVelByDistance(Math.sqrt(d));
 
         if (mainTask.step()) {
             return this;

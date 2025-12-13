@@ -18,6 +18,8 @@ public class Shooter {
     public static double MID_SHOOT_VEL = 0.8;
     public static double CLOSE_SHOOT_VEL = 0.7;
 
+    public static double IDLE_VEL = 0.3;
+
     public static double FAR_SHOOT_HOOD = 0.15;
     public static double MID_SHOOT_HOOD = 0.15;
     public static double CLOSE_SHOOT_HOOD = 0.15;
@@ -26,7 +28,7 @@ public class Shooter {
     public static double I = 0.0;
     public static double D = 0.0;
 
-    public static double V = 1.155;
+    public static double V = 1.25;
     public static double S = 0;
 
     private Servo HOOD_SERVO;
@@ -34,8 +36,6 @@ public class Shooter {
     public final double HOOD_MIN_POS = 0;
     private final Motor LEFT_WHEEL;
     private final Motor RIGHT_WHEEL;
-
-    public static final double IDLE_VELOCITY = 0.5;
 
     private double targetVelocity = 0.0;
 
@@ -62,19 +62,19 @@ public class Shooter {
 
         HOOD_POSITION_LUT.add(70, CLOSE_SHOOT_HOOD);
         HOOD_POSITION_LUT.add(88, MID_SHOOT_HOOD);
-        HOOD_POSITION_LUT.add(120, FAR_SHOOT_HOOD);
+        HOOD_POSITION_LUT.add(111, FAR_SHOOT_HOOD);
 
-        HOOD_POSITION_LUT.add(10000, FAR_SHOOT_HOOD);
+        HOOD_POSITION_LUT.add(200, FAR_SHOOT_HOOD);
 
         HOOD_POSITION_LUT.createLUT();
 
         VELOCITY_LUT.add(0, CLOSE_SHOOT_VEL);
 
-        VELOCITY_LUT.add(70, CLOSE_SHOOT_VEL);
+        VELOCITY_LUT.add(60, CLOSE_SHOOT_VEL);
         VELOCITY_LUT.add(88, MID_SHOOT_VEL);
-        VELOCITY_LUT.add(120, FAR_SHOOT_VEL);
+        VELOCITY_LUT.add(111, FAR_SHOOT_VEL);
 
-        VELOCITY_LUT.add(10000, FAR_SHOOT_VEL);
+        VELOCITY_LUT.add(200, FAR_SHOOT_VEL);
 
         VELOCITY_LUT.createLUT();
     }
@@ -133,6 +133,10 @@ public class Shooter {
         normalizedVelocity /= 2;
 
         return normalizedVelocity;
+    }
+
+    public double getTargetVelocity() {
+        return targetVelocity;
     }
 
     public class setVelocity extends Task{

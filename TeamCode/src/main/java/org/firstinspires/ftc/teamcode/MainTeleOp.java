@@ -47,6 +47,8 @@ public class MainTeleOp extends LinearOpMode {
     public static Alliance alliance = Alliance.BLUE;
     public static StartingPositionMode startingPositionMode = StartingPositionMode.CARRY_OVER;
 
+    public static double TARGET_X, TARGET_Y;
+
     @Override
     public void runOpMode() {
         MyRobot robotContext = new MyRobot(
@@ -113,8 +115,8 @@ public class MainTeleOp extends LinearOpMode {
                 break;
         }
 
-        double targetX = (alliance == Alliance.BLUE) ? BLUE_TARGET_X : RED_TARGET_X;
-        double targetY = (alliance == Alliance.BLUE) ? BLUE_TARGET_Y : RED_TARGET_Y;
+        TARGET_X = (alliance == Alliance.BLUE) ? BLUE_TARGET_X : RED_TARGET_X;
+        TARGET_Y = (alliance == Alliance.BLUE) ? BLUE_TARGET_Y : RED_TARGET_Y;
 
         follower.update();
 
@@ -127,14 +129,12 @@ public class MainTeleOp extends LinearOpMode {
 
             Pose currentPose = follower.getPose();
 
-            robotContext.TURRET.setRotation(Turret.calculateGoalRotation( currentPose.getX(), currentPose.getY(), currentPose.getHeading(), targetX, targetY));
+            robotContext.TURRET.setRotation(Turret.calculateGoalRotation( currentPose.getX(), currentPose.getY(), currentPose.getHeading(), TARGET_X, TARGET_Y));
             robotContext.TURRET.updatePID();
             robotContext.SHOOTER.updatePID();
 
-            double d = Math.pow(currentPose.getX() - targetX, 2) + Math.pow(currentPose.getY() - targetY, 2);
+            double d = getDistanceToTarget();
             robotContext.SHOOTER.setHoodByDistance(Math.sqrt(d));
-
-            robotContext.SHOOTER.setVelByDistance(Math.sqrt(d));
 
             if (gamepad2.right_bumper) {
                 robotContext.TURRET.incrementAngleOffset(0.01);
@@ -184,6 +184,14 @@ public class MainTeleOp extends LinearOpMode {
             telemetryM.debug("x pos", currentPose.getX());
             telemetryM.debug("y pos", currentPose.getY());
             telemetryM.debug("heading pos", currentPose.getHeading());
+            telemetryM.debug("Distance from goal", d);
+            telemetryM.addData("Current Velocity", robotContext.SHOOTER.getVelocity());
+            telemetryM.addData("Target Velocity", robotContext.SHOOTER.getTargetVelocity());
+            telemetryM.update();
         }
+    }
+
+    public double getDistanceToTarget() {
+        return Math.sqrt(Math.pow(MyRobot.follower.getPose().getX() - TARGET_X, 2) + Math.pow(MyRobot.follower.getPose().getY() - TARGET_Y, 2));
     }
 }

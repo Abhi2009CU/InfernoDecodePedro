@@ -5,14 +5,9 @@ import com.jumpypants.murphy.states.State;
 import com.jumpypants.murphy.tasks.ParallelTask;
 import com.jumpypants.murphy.tasks.SequentialTask;
 import com.jumpypants.murphy.tasks.Task;
-import com.jumpypants.murphy.util.RobotContext;
-import com.pedropathing.geometry.Pose;
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.teamcode.MyRobot;
 import org.firstinspires.ftc.teamcode.subSystems.Shooter;
-import org.firstinspires.ftc.teamcode.subSystems.Turret;
 
 public class IntakingState implements State {
     private final MyRobot robotContext;
@@ -31,6 +26,8 @@ public class IntakingState implements State {
 
     @Override
     public State step() {
+        robotContext.SHOOTER.setVel(Shooter.IDLE_VEL);
+
         if (mainTask.step()) {
             return this;
         }
