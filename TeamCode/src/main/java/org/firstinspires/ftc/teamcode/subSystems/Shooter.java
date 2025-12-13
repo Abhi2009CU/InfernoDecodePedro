@@ -16,8 +16,8 @@ public class Shooter {
     private final Interplut HOOD_POSITION_LUT = new Interplut();
     private final Interplut VELOCITY_LUT = new Interplut();
 
-    public static double FAR_SHOOT_VEL = 0.9;
-    public static double MID_SHOOT_VEL = 0.8;
+    public static double FAR_SHOOT_VEL = 0.8;
+    public static double MID_SHOOT_VEL = 0.75;
     public static double CLOSE_SHOOT_VEL = 0.7;
 
     public static double IDLE_VEL = 0.3;

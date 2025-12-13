@@ -43,9 +43,5 @@ public class MyRobot extends RobotContext {
 
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
-
-        if (MyRobot.follower == null) {
-            MyRobot.follower = Constants.createFollower(hardwareMap);
-        }
     }
 }

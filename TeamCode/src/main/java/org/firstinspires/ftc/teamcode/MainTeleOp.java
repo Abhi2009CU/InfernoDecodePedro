@@ -9,6 +9,7 @@ import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.robotStates.IntakingState;
 import org.firstinspires.ftc.teamcode.subSystems.Intake;
 import org.firstinspires.ftc.teamcode.subSystems.Shooter;
@@ -61,9 +62,6 @@ public class MainTeleOp extends LinearOpMode {
                 new Transfer(hardwareMap),
                 new Turret(hardwareMap)
         );
-
-        Follower follower = MyRobot.follower;
-
         stateMachine = new StateMachine(new IntakingState(robotContext), robotContext);
         TelemetryManager telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
 
@@ -88,6 +86,12 @@ public class MainTeleOp extends LinearOpMode {
 
             telemetry.update();
         }
+
+        if (startingPositionMode != StartingPositionMode.CARRY_OVER) {
+            MyRobot.follower = Constants.createFollower(hardwareMap);
+        }
+
+        Follower follower = MyRobot.follower;
 
 
         // If the alliance is BLUE, use the positions as is
