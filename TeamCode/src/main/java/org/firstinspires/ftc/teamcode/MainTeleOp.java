@@ -20,15 +20,26 @@ import org.firstinspires.ftc.teamcode.subSystems.Turret;
 @TeleOp(name="(TELE) Main", group="Main")
 public class MainTeleOp extends LinearOpMode {
     public enum Alliance {
+        UNSET,
         RED,
         BLUE
     }
 
     public enum StartingPositionMode {
+        UNSET,
         CLOSE,
         FAR,
         CARRY_OVER
     }
+
+    public static class UnsetAttributeException extends RuntimeException {
+        public UnsetAttributeException(String message) {
+            super(message);
+        }
+        public UnsetAttributeException(String message, Throwable cause) {
+            super(message, cause);
+        }
+    };
 
     StateMachine stateMachine;
 
@@ -45,8 +56,8 @@ public class MainTeleOp extends LinearOpMode {
     public static double BLUE_CLOSE_STARTING_Y = 135;
     public static double BLUE_CLOSE_STARTING_HEADING = 1.5 * Math.PI;
 
-    public static Alliance alliance = Alliance.BLUE;
-    public static StartingPositionMode startingPositionMode = StartingPositionMode.CARRY_OVER;
+    public static Alliance alliance = Alliance.UNSET;
+    public static StartingPositionMode startingPositionMode = StartingPositionMode.UNSET;
 
     public static double TARGET_X, TARGET_Y;
 
@@ -85,6 +96,18 @@ public class MainTeleOp extends LinearOpMode {
             telemetry.addLine("Starting Position: " + startingPositionMode.name());
 
             telemetry.update();
+        }
+        if (alliance == Alliance.UNSET) {
+            telemetry.clear();
+            telemetry.addLine("/!\\ Alliance was unset, did you forget to press a button?");
+            telemetry.update();
+            throw new UnsetAttributeException("/!\\ Alliance was unset, did you forget to press a button?");
+        }
+        if (startingPositionMode == StartingPositionMode.UNSET) {
+            telemetry.clear();
+            telemetry.addLine("/!\\ Starting Position Mode was unset, did you forget to press a button?");
+            telemetry.update();
+            throw new UnsetAttributeException("/!\\ Starting Position Mode was unset, did you forget to press a button?");
         }
 
         if (startingPositionMode != StartingPositionMode.CARRY_OVER) {
