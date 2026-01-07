@@ -3,11 +3,15 @@ package org.firstinspires.ftc.teamcode.subSystems;
 import com.bylazar.configurables.annotations.Configurable;
 import com.jumpypants.murphy.tasks.ParallelTask;
 import com.jumpypants.murphy.tasks.QueueTask;
+import com.jumpypants.murphy.tasks.SequentialTask;
 import com.jumpypants.murphy.tasks.Task;
+import com.jumpypants.murphy.tasks.WaitTask;
 import com.jumpypants.murphy.util.RobotContext;
 import org.firstinspires.ftc.teamcode.MyRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import java.util.ArrayList;
 
 @Configurable
 public class Transfer {
@@ -135,6 +139,56 @@ public class Transfer {
                 return false;
             }
             return true;
+        }
+    }
+
+    public class SendThreeTask extends SequentialTask {
+        private final ArrayList<SequentialTask> tasks = new ArrayList<>();
+
+        public SendThreeTask(MyRobot robotContext) {
+            super(robotContext);
+        }
+
+        @Override
+        protected void initialize(RobotContext robotContext) {
+            MyRobot robot = (MyRobot) robotContext;
+            tasks.add(
+                    new SequentialTask(robotContext,
+                            new MoveRightTask(robotContext, Transfer.RIGHT_UP_POS, FLAP_TIME_UP_COEFFICIENT),
+                            new MoveRightTask(robotContext, Transfer.RIGHT_DOWN_POS, FLAP_TIME_DOWN_COEFFICIENT)
+                    )
+            );
+            tasks.add(
+                    new SequentialTask(robotContext,
+                            new MoveLeftTask(robotContext, Transfer.LEFT_UP_POS, FLAP_TIME_UP_COEFFICIENT),
+                            new MoveLeftTask(robotContext, Transfer.LEFT_DOWN_POS, FLAP_TIME_DOWN_COEFFICIENT)
+                    )
+            );
+            tasks.add(
+                    new SequentialTask(robotContext,
+                            new ParallelTask(robotContext,
+                                    true,
+                                    new MoveLeftTask(robotContext, Transfer.LEFT_UP_POS, FLAP_TIME_UP_COEFFICIENT),
+                                    new MoveRightTask(robotContext, Transfer.RIGHT_UP_POS, FLAP_TIME_UP_COEFFICIENT)
+                            ),
+                            new WaitTask(robotContext, 0.5),
+                            new ParallelTask(robotContext,
+                                    true,
+                                    new MoveLeftTask(robotContext, Transfer.LEFT_DOWN_POS, FLAP_TIME_DOWN_COEFFICIENT),
+                                    new MoveRightTask(robotContext, Transfer.RIGHT_DOWN_POS, FLAP_TIME_DOWN_COEFFICIENT)
+                            )
+                    )
+            );
+        }
+
+        @Override
+        protected boolean run(RobotContext robotContext) {
+            if (tasks.isEmpty()) {
+                return false;
+            }
+            boolean cont = tasks.get(0).step();
+            tasks.remove(0);
+            return cont;
         }
     }
 }
