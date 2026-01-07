@@ -32,7 +32,7 @@ public class MainTeleOp extends LinearOpMode {
         CARRY_OVER
     }
 
-    public static class UnsetAttributeException extends Throwable {
+    public static class UnsetAttributeException extends RuntimeException {
         public UnsetAttributeException(String message) {
             super(message);
         }
