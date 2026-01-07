@@ -114,6 +114,10 @@ public class MainTeleOp extends LinearOpMode {
             MyRobot.follower = Constants.createFollower(hardwareMap);
         }
 
+        if (MyRobot.follower == null) {
+            MyRobot.follower = Constants.createFollower(hardwareMap);
+        }
+
         Follower follower = MyRobot.follower;
 
 
