@@ -17,12 +17,12 @@ import org.firstinspires.ftc.teamcode.subSystems.Turret;
 @Configurable
 @TeleOp(name="Full Test", group="Debug")
 public class FullTest extends LinearOpMode {
-    public static double targetX = 144;
-    public static double targetY = 144;
+    public static double HOOD_POSITION = 0.45;
+
+    public static double targetX = 135;
+    public static double targetY = 135;
 
     public static Pose startingPose = new Pose(72, 72, 0.5 * Math.PI);
-
-    public static double TARGET_VELOCITY = 0.0;
 
     public static double LEFT_UP = 0.5;
     public static double LEFT_DOWN = 0.15;
@@ -59,7 +59,8 @@ public class FullTest extends LinearOpMode {
         follower.startTeleopDrive();
 
         while (opModeIsActive()) {
-            shooter.setVel(TARGET_VELOCITY);
+            shooter.setHoodPosition(HOOD_POSITION);
+
             shooter.updatePID();
 
             double intakePower = Math.max(-1.0, Math.min(1.0, gamepad1.right_trigger - gamepad1.left_trigger));
@@ -77,24 +78,36 @@ public class FullTest extends LinearOpMode {
                 left.setPosition(LEFT_DOWN);
             }
 
+            if (gamepad2.dpad_up) {
+                shooter.setVel(1);
+            } else if (gamepad2.dpad_down) {
+                shooter.setVel(0);
+            }
+
+            if (gamepad2.right_bumper) {
+                turret.incrementAngleOffset(0.01);
+            }
+            if (gamepad2.left_bumper) {
+                turret.incrementAngleOffset(-0.01);
+            }
+
             follower.update();
 
-
             follower.setTeleOpDrive(
-                    -gamepad1.left_stick_y,
-                    -gamepad1.left_stick_x,
-                    -gamepad1.right_stick_x,
-                    true // robot Centric
+                    Math.pow(-gamepad1.left_stick_y, 3),
+                    Math.pow(-gamepad1.left_stick_x, 3),
+                    Math.pow(-gamepad1.right_stick_x, 3),
+                    false // field Centric
             );
+
 
             Pose currentPose = follower.getPose();
 
-            turret.getCurrentRotation();
             turret.setRotation(Turret.calculateGoalRotation( currentPose.getX(), currentPose.getY(), currentPose.getHeading(), targetX, targetY));
             turret.updatePID();
 
             telemetryM.debug("Current Velocity (ticks/s)", shooter.getVelocity());
-            telemetryM.debug("Target Velocity (ticks/s)", TARGET_VELOCITY);
+            telemetryM.debug("Current Distance", Math.sqrt(Math.pow(currentPose.getX() - targetX, 2) + Math.pow(currentPose.getY() - targetY, 2)));
 
             telemetryM.update();
         }
