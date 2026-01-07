@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.subSystems.Transfer;
 import org.firstinspires.ftc.teamcode.subSystems.Turret;
 
 @Configurable
-@Autonomous(name="AUTON_WITH_PEDRO", group="Linear OpMode")
+@Autonomous(name="(AUTO) Auton", group="Main")
 public class MainAutonFar extends LinearOpMode {
     public enum Alliance {
         RED,

@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.subSystems.Turret;
 import java.util.Timer;
 
 @Configurable
-@Autonomous(name="AUTON_DRIVE_FORWARD", group="Linear OpMode")
+@Autonomous(name="AUTON_DRIVE_FORWARD", group="Main")
 public class DriveForwardAuton extends LinearOpMode {
     public enum Alliance {
         RED,

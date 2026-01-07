@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.subSystems.Shooter;
 import org.firstinspires.ftc.teamcode.subSystems.Turret;
 
 @Configurable
-@TeleOp(name="Full Test", group="Debug")
+@TeleOp(name="Debug - Full Test", group="Debug")
 public class FullTest extends LinearOpMode {
     public static double HOOD_POSITION = 0.45;
 

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subSystems.Turret;
 
 @Configurable
-@TeleOp(name="Turret Rotation Tester Localized", group="Debug")
+@TeleOp(name="Debug - Turret Rotation Tester Localized", group="Debug")
 public class TurretRotationTesterLocalized extends LinearOpMode {
     public static double targetX = 144;
     public static double targetY = 144;

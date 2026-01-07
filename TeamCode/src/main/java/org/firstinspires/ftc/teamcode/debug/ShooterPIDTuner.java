@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.subSystems.Shooter;
 import org.firstinspires.ftc.teamcode.subSystems.Turret;
 
 @Configurable
-@TeleOp(name="Shooter PID Tuner", group="Debug")
+@TeleOp(name="Debug - Shooter PID Tuner", group="Debug")
 public class ShooterPIDTuner extends LinearOpMode {
     public static double TARGET_VELOCITY = 0.0;
 

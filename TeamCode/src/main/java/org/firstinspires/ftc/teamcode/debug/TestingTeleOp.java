@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 @Configurable
-@TeleOp
+@TeleOp(name="Debug - Testing TeleOp", group="Debug")
 public class TestingTeleOp extends OpMode {
     private Follower follower;
     public static Pose startingPose;

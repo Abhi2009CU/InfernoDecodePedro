@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.subSystems.Shooter;
 
 @Configurable
-@TeleOp(name="Hood Tester", group="Debug")
+@TeleOp(name="Debug - Hood Tester", group="Debug")
 public class HoodTester extends LinearOpMode {
     public static double TARGET_VELOCITY = 0.0;
     public static double HOOD_POSITION = 0.5;

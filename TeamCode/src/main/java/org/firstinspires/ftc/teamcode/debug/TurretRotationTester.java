@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.subSystems.Turret;
 
 @Configurable
-@TeleOp(name="Turret Rotation Tester", group="Debug")
+@TeleOp(name="Debug - Turret Rotation Tester", group="Debug")
 public class TurretRotationTester extends LinearOpMode {
     public static double robotX = 72;
     public static double robotY = 72;

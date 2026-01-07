@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.subSystems.Turret;
 
 @Configurable
-@TeleOp(name="Turret PID Tuner", group="Debug")
+@TeleOp(name="Debug - Turret PID Tuner", group="Debug")
 public class TurretPIDTuner extends LinearOpMode {
     public static double TARGET_ROTATION = 0.0;
 
