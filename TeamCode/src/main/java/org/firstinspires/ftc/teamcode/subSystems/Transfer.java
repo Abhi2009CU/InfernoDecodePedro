@@ -15,8 +15,8 @@ import java.util.ArrayList;
 
 @Configurable
 public class Transfer {
-    public static double FLAP_TIME_UP_COEFFICIENT = 2;//2;
-    public static double FLAP_TIME_DOWN_COEFFICIENT = 2;//2;
+    public static double FLAP_TIME_UP_COEFFICIENT = 0.15;
+    public static double FLAP_TIME_DOWN_COEFFICIENT = 0.15;
 
     private final Servo rightFlap;
     private final Servo leftFlap;
@@ -104,6 +104,10 @@ public class Transfer {
                         robot.TRANSFER.new MoveLeftTask(robot, Transfer.LEFT_DOWN_POS, FLAP_TIME_DOWN_COEFFICIENT)));
             }
 
+            if (robot.GAMEPAD1.circleWasPressed()) {
+                this.addTask(robot.TRANSFER.new SendThreeTask(robot));
+            }
+
             return super.run(robotContextWrapper);
         }
     }
@@ -131,11 +135,6 @@ public class Transfer {
                 leftFlap.setPosition(Transfer.LEFT_UP_POS);
             } else {
                 leftFlap.setPosition(Transfer.LEFT_DOWN_POS);
-            }
-
-            if (robot.GAMEPAD1.xWasPressed()){
-                robot.TRANSFER.new SendThreeTask(robot).step();
-                return false;
             }
 
             if (robot.GAMEPAD2.dpadUpWasPressed()){
