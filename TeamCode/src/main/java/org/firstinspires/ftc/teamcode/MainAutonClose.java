@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
-import com.jumpypants.murphy.states.StateMachine;
-import com.jumpypants.murphy.tasks.ParallelTask;
 import com.jumpypants.murphy.tasks.SequentialTask;
 import com.jumpypants.murphy.tasks.Task;
 import com.jumpypants.murphy.tasks.WaitTask;
@@ -16,11 +14,9 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.pedropathing.paths.Path;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-import org.firstinspires.ftc.teamcode.robotStates.IntakingState;
 import org.firstinspires.ftc.teamcode.subSystems.Intake;
 import org.firstinspires.ftc.teamcode.subSystems.Shooter;
 import org.firstinspires.ftc.teamcode.subSystems.Transfer;
@@ -119,22 +115,23 @@ public class MainAutonClose extends LinearOpMode {
         public PathChain Path7;
         public PathChain Path8;
 
-        public Paths(Follower follower) {
+        public Paths(Follower follower, Alliance alliance) {
             Path1 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(27.316, 131.650),
+                                    mirror(new Pose(27.316, 131.650), alliance),
 
-                                    new Pose(47.666, 95.693)
+                                    mirror(new Pose(47.666, 95.693), alliance)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(55), Math.toRadians(180))
-
+                    ).setLinearHeadingInterpolation(
+                            mirrorHeading(Math.toRadians(55), alliance),
+                            mirrorHeading(Math.toRadians(180), alliance))
                     .build();
 
             Path2 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(47.666, 95.693),
-                                    new Pose(35.596, 81.593),
-                                    new Pose(16.937, 83.896)
+                                    mirror(new Pose(47.666, 95.693), alliance),
+                                    mirror(new Pose(35.596, 81.593), alliance),
+                                    mirror(new Pose(16.937, 83.896), alliance)
                             )
                     ).setTangentHeadingInterpolation()
 
@@ -142,9 +139,9 @@ public class MainAutonClose extends LinearOpMode {
 
             Path3 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(16.937, 83.896),
-                                    new Pose(35.676, 81.575),
-                                    new Pose(47.826, 95.673)
+                                    mirror(new Pose(16.937, 83.896), alliance),
+                                    mirror(new Pose(35.676, 81.575), alliance),
+                                    mirror(new Pose(47.826, 95.673), alliance)
                             )
                     ).setTangentHeadingInterpolation()
 //                    .setReversed(true)
@@ -152,9 +149,9 @@ public class MainAutonClose extends LinearOpMode {
 
             Path4 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(47.826, 95.673),
-                                    new Pose(45.561, 55.680),
-                                    new Pose(17.526, 59.349)
+                                    mirror(new Pose(47.826, 95.673), alliance),
+                                    mirror(new Pose(45.561, 55.680), alliance),
+                                    mirror(new Pose(17.526, 59.349), alliance)
                             )
                     ).setTangentHeadingInterpolation()
 
@@ -162,9 +159,9 @@ public class MainAutonClose extends LinearOpMode {
 
             Path5 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(17.526, 59.349),
-                                    new Pose(45.528, 55.826),
-                                    new Pose(47.824, 95.716)
+                                    mirror(new Pose(17.526, 59.349), alliance),
+                                    mirror(new Pose(45.528, 55.826), alliance),
+                                    mirror(new Pose(47.824, 95.716), alliance)
                             )
                     ).setTangentHeadingInterpolation()
 //                    .setReversed(true)
@@ -172,9 +169,9 @@ public class MainAutonClose extends LinearOpMode {
 
             Path6 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(47.824, 95.716),
-                                    new Pose(51.950, 29.084),
-                                    new Pose(17.904, 35.588)
+                                    mirror(new Pose(47.824, 95.716), alliance),
+                                    mirror(new Pose(51.950, 29.084), alliance),
+                                    mirror(new Pose(17.904, 35.588), alliance)
                             )
                     ).setTangentHeadingInterpolation()
 
@@ -182,9 +179,8 @@ public class MainAutonClose extends LinearOpMode {
 
             Path7 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(17.904, 35.588),
-
-                                    new Pose(71.941, 23.163)
+                                    mirror(new Pose(17.904, 35.588), alliance),
+                                    mirror(new Pose(71.941, 23.163), alliance)
                             )
                     ).setTangentHeadingInterpolation()
 
@@ -192,28 +188,54 @@ public class MainAutonClose extends LinearOpMode {
 
             Path8 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(71.941, 23.163),
-                                    new Pose(86.470, 33.371),
-                                    new Pose(105.388, 33.510)
+                                    mirror(new Pose(71.941, 23.163), alliance),
+                                    mirror(new Pose(86.470, 33.371), alliance),
+                                    mirror(new Pose(105.388, 33.510), alliance)
                             )
                     ).setTangentHeadingInterpolation()
 
                     .build();
         }
+        private Pose mirror(Pose pose, Alliance alliance) {
+            if (alliance == Alliance.RED) {
+                return new Pose(144 - pose.getX(), 144 - pose.getY(), Math.PI - pose.getHeading());
+            }
+            return pose;
+        }
+
+        private double mirrorHeading(double heading, Alliance alliance) {
+            if (alliance == Alliance.RED) {
+                return Math.PI - heading;
+            }
+            return heading;
+        }
     }
-    
-    private Task goToPath(PathChain path) {
-        follower.followPath(path);
-        follower.update();
-        return new WaitTask(robotContext, 0);
+
+    public class goToPath extends Task{
+        private final PathChain path;
+        public goToPath(PathChain path){
+            super(robotContext);
+            this.path = path;
+        }
+
+        @Override
+        public void initialize(RobotContext robotContext){
+        }
+
+        @Override
+        protected boolean run(RobotContext robotContext){
+            follower.followPath(path);
+            follower.update();
+            return !follower.isBusy();
+        }
     }
 
 
     private SequentialTask autonomousPathUpdate() {
-        Paths newpaths = new Paths(follower);
+        Paths newpaths = new Paths(follower, alliance);
         SequentialTask sequentialTask = new SequentialTask(
                 robotContext,
-                goToPath(newpaths.Path1),
+                new goToPath(newpaths.Path1),
                 robotContext.SHOOTER.new RunOuttakeTask(robotContext, 1),
                 robotContext.TRANSFER.new SendThreeTask(robotContext),
                 new WaitTask(robotContext, 1),
@@ -221,32 +243,32 @@ public class MainAutonClose extends LinearOpMode {
 
 
                 robotContext.INTAKE.new SetIntakePower(robotContext, 1),
-                goToPath(newpaths.Path2),
+                new goToPath(newpaths.Path2),
                 robotContext.INTAKE.new SetIntakePower(robotContext, 0),
-                
-                goToPath(newpaths.Path3),
+
+                new goToPath(newpaths.Path3),
                 robotContext.SHOOTER.new RunOuttakeTask(robotContext, 1),
                 robotContext.TRANSFER.new SendThreeTask(robotContext),
                 robotContext.SHOOTER.new RunOuttakeTask(robotContext, Shooter.IDLE_VEL),
-                
+
                 robotContext.INTAKE.new SetIntakePower(robotContext, 1),
-                goToPath(newpaths.Path4),
+                new goToPath(newpaths.Path4),
                 robotContext.INTAKE.new SetIntakePower(robotContext, 0),
-                
-                goToPath(newpaths.Path5),
+
+                new goToPath(newpaths.Path5),
                 robotContext.SHOOTER.new RunOuttakeTask(robotContext, 1),
                 robotContext.TRANSFER.new SendThreeTask(robotContext),
                 robotContext.SHOOTER.new RunOuttakeTask(robotContext, Shooter.IDLE_VEL),
                 //Path 6 intakes, Path 7 outakes from far outake
                 robotContext.INTAKE.new SetIntakePower(robotContext, 1),
-                goToPath(newpaths.Path6),
+                new goToPath(newpaths.Path6),
                 robotContext.INTAKE.new SetIntakePower(robotContext, 0),
-                
-                goToPath(newpaths.Path7),
+
+                new goToPath(newpaths.Path7),
                 robotContext.SHOOTER.new RunOuttakeTask(robotContext, 1),
                 robotContext.TRANSFER.new SendThreeTask(robotContext),
                 robotContext.SHOOTER.new RunOuttakeTask(robotContext, 0)//,
-                
+
 //                goToPath(newpaths.Path8)
         );
         return sequentialTask;
