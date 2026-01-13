@@ -6,17 +6,14 @@ import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.subSystems.Shooter;
 
 @Configurable
-@Disabled
 
-@TeleOp(name="Debug - Hood Tester", group="Debug")
-public class HoodTester extends LinearOpMode {
-    public static double TARGET_VELOCITY = 0.0;
-    public static double HOOD_POSITION = 0.5;
+@TeleOp(name="Hood Tuner", group="Debug")
+public class HoodTuner extends LinearOpMode {
+    public static double HOOD_POSITION = 0;
 
     @Override
     public void runOpMode() {
@@ -27,12 +24,9 @@ public class HoodTester extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            shooter.setVel(TARGET_VELOCITY);
-            shooter.updatePID();
             shooter.setHoodPosition(HOOD_POSITION);
 
-            telemetryM.debug("Current Velocity (ticks/s)", shooter.getVelocity());
-            telemetryM.debug("Target Velocity (ticks/s)", TARGET_VELOCITY);
+            telemetryM.debug("Hood Position", HOOD_POSITION);
 
             telemetryM.update();
         }

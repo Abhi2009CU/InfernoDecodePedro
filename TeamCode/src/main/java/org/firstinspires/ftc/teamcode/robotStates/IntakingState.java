@@ -13,6 +13,9 @@ public class IntakingState implements State {
     private final MyRobot robotContext;
     private final Task mainTask;
 
+    private boolean rumbled = false;
+
+
     public IntakingState(MyRobot robotContext) {
         this.robotContext = robotContext;
 
@@ -26,6 +29,12 @@ public class IntakingState implements State {
 
     @Override
     public State step() {
+        if(!rumbled) {
+            rumbled = true;
+            robotContext.GAMEPAD1.rumbleBlips(1);
+            robotContext.GAMEPAD2.rumbleBlips(1);
+        }
+
         robotContext.SHOOTER.setVel(Shooter.IDLE_VEL);
 
         if (mainTask.step()) {

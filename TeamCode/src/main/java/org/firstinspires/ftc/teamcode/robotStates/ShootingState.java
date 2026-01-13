@@ -18,6 +18,8 @@ public class ShootingState implements State {
     private final MyRobot robotContext;
     private final Task mainTask;
 
+    private boolean rumbled = false;
+
     public ShootingState(MyRobot robotContext) {
         this.robotContext = robotContext;
 
@@ -31,6 +33,11 @@ public class ShootingState implements State {
 
     @Override
     public State step() {
+        if(!rumbled) {
+            rumbled = true;
+            robotContext.GAMEPAD1.rumbleBlips(2);
+            robotContext.GAMEPAD2.rumbleBlips(2);
+        }
 
         Pose currentPose = MyRobot.follower.getPose();
 

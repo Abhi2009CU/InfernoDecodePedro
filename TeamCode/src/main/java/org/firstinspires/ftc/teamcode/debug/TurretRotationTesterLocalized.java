@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.debug;
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -10,6 +11,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subSystems.Turret;
 
 @Configurable
+@Disabled
+
 @TeleOp(name="Debug - Turret Rotation Tester Localized", group="Debug")
 public class TurretRotationTesterLocalized extends LinearOpMode {
     public static double targetX = 144;

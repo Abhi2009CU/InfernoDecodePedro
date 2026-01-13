@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode.debug;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.subSystems.Turret;
 
 @Configurable
+@Disabled
+
 @TeleOp(name="Debug - Turret PID Tuner", group="Debug")
 public class TurretPIDTuner extends LinearOpMode {
     public static double TARGET_ROTATION = 0.0;

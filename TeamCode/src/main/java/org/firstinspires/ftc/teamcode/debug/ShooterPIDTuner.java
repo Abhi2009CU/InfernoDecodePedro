@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.debug;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -11,6 +12,8 @@ import org.firstinspires.ftc.teamcode.subSystems.Shooter;
 import org.firstinspires.ftc.teamcode.subSystems.Turret;
 
 @Configurable
+@Disabled
+
 @TeleOp(name="Debug - Shooter PID Tuner", group="Debug")
 public class ShooterPIDTuner extends LinearOpMode {
     public static double TARGET_VELOCITY = 0.0;
