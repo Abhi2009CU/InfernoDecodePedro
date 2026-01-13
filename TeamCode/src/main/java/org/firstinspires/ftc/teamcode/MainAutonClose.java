@@ -237,10 +237,10 @@ public class MainAutonClose extends LinearOpMode {
                 robotContext,
                 new goToPath(newpaths.Path1),
                 robotContext.SHOOTER.new RunOuttakeTask(robotContext, 1),
+                robotContext.INTAKE.new SetIntakePower(robotContext, 1),
                 robotContext.TRANSFER.new SendThreeTask(robotContext),
                 new WaitTask(robotContext, 1),
                 robotContext.SHOOTER.new RunOuttakeTask(robotContext, Shooter.IDLE_VEL),
-
 
                 robotContext.INTAKE.new SetIntakePower(robotContext, 1),
                 new goToPath(newpaths.Path2),
@@ -248,6 +248,7 @@ public class MainAutonClose extends LinearOpMode {
 
                 new goToPath(newpaths.Path3),
                 robotContext.SHOOTER.new RunOuttakeTask(robotContext, 1),
+                robotContext.INTAKE.new SetIntakePower(robotContext, 1),
                 robotContext.TRANSFER.new SendThreeTask(robotContext),
                 robotContext.SHOOTER.new RunOuttakeTask(robotContext, Shooter.IDLE_VEL),
 
@@ -257,19 +258,19 @@ public class MainAutonClose extends LinearOpMode {
 
                 new goToPath(newpaths.Path5),
                 robotContext.SHOOTER.new RunOuttakeTask(robotContext, 1),
+                robotContext.INTAKE.new SetIntakePower(robotContext, 1),
                 robotContext.TRANSFER.new SendThreeTask(robotContext),
                 robotContext.SHOOTER.new RunOuttakeTask(robotContext, Shooter.IDLE_VEL),
-                //Path 6 intakes, Path 7 outakes from far outake
+
                 robotContext.INTAKE.new SetIntakePower(robotContext, 1),
                 new goToPath(newpaths.Path6),
                 robotContext.INTAKE.new SetIntakePower(robotContext, 0),
 
                 new goToPath(newpaths.Path7),
                 robotContext.SHOOTER.new RunOuttakeTask(robotContext, 1),
+                robotContext.INTAKE.new SetIntakePower(robotContext, 1),
                 robotContext.TRANSFER.new SendThreeTask(robotContext),
-                robotContext.SHOOTER.new RunOuttakeTask(robotContext, 0)//,
-
-//                goToPath(newpaths.Path8)
+                robotContext.SHOOTER.new RunOuttakeTask(robotContext, 0)
         );
         return sequentialTask;
     }
