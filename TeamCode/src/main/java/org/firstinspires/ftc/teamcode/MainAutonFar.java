@@ -3,23 +3,18 @@ package org.firstinspires.ftc.teamcode;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
-import com.jumpypants.murphy.states.StateMachine;
-import com.jumpypants.murphy.tasks.ParallelTask;
 import com.jumpypants.murphy.tasks.SequentialTask;
 import com.jumpypants.murphy.tasks.Task;
 import com.jumpypants.murphy.tasks.WaitTask;
 import com.jumpypants.murphy.util.RobotContext;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.pedropathing.paths.Path;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-import org.firstinspires.ftc.teamcode.robotStates.IntakingState;
 import org.firstinspires.ftc.teamcode.subSystems.Intake;
 import org.firstinspires.ftc.teamcode.subSystems.Shooter;
 import org.firstinspires.ftc.teamcode.subSystems.Transfer;
@@ -120,10 +115,12 @@ public class MainAutonFar extends LinearOpMode {
         buildPaths(startingPose);
 
         Task mainTask = new SequentialTask(robotContext,
-                getGoToPreloadTask(robotContext, follower),
+                new FollowPathTask(robotContext, follower, goToPreload),
                 new WaitTask(robotContext, 1),
-                getShootThreeTask(robotContext),
-                getGoToFirstEndpointTask(robotContext, follower)
+                robotContext.INTAKE.new SetIntakePower(robotContext, 1),
+                robotContext.TRANSFER.new SendThreeTask(robotContext),
+                robotContext.INTAKE.new SetIntakePower(robotContext, 0),
+                new FollowPathTask(robotContext, follower, goToFirstEndpoint)
         );
 
         while (opModeIsActive()){
@@ -173,61 +170,24 @@ public class MainAutonFar extends LinearOpMode {
         goToFirstEndpoint.setLinearHeadingInterpolation(preloadPose.getHeading(), firstEndpointHeading);
     }
 
-    private Task getGoToPreloadTask(MyRobot robotContext, Follower follower) {
-        return new Task(robotContext) {
-            @Override
-            protected void initialize(RobotContext robotContext) {
-                follower.followPath(goToPreload);
-            }
+    private static class FollowPathTask extends Task {
+        private final Follower follower;
+        private final Path path;
 
-            @Override
-            protected boolean run(RobotContext robotContext) {
-                return follower.isBusy();
-            }
-        };
-    }
+        public FollowPathTask(RobotContext robotContext, Follower follower, Path path) {
+            super(robotContext);
+            this.follower = follower;
+            this.path = path;
+        }
 
-    private Task getGoToFirstEndpointTask(MyRobot robotContext, Follower follower) {
-        return new Task(robotContext) {
-            @Override
-            protected void initialize(RobotContext robotContext) {
-                follower.followPath(goToFirstEndpoint);
-            }
+        @Override
+        protected void initialize(RobotContext robotContext) {
+            follower.followPath(path);
+        }
 
-            @Override
-            protected boolean run(RobotContext robotContext) {
-                return follower.isBusy();
-            }
-        };
-    }
-
-    private Task getShootThreeTask(MyRobot robotContext){
-        return new SequentialTask(robotContext,
-                robotContext.INTAKE.new SetIntakePower(robotContext, 1),
-                robotContext.TRANSFER.new MoveRightTask(robotContext, Transfer.RIGHT_UP_POS, Transfer.FLAP_TIME_UP_COEFFICIENT),
-                robotContext.TRANSFER.new MoveRightTask(robotContext, Transfer.RIGHT_DOWN_POS, Transfer.FLAP_TIME_DOWN_COEFFICIENT),
-                robotContext.INTAKE.new SetIntakePower(robotContext, 0),
-                new WaitTask(robotContext,0.5),
-                new ParallelTask(robotContext, false,
-                        robotContext.TRANSFER.new MoveLeftTask(robotContext, Transfer.LEFT_UP_POS, Transfer.FLAP_TIME_UP_COEFFICIENT),
-                        robotContext.TRANSFER.new MoveRightTask(robotContext, Transfer.RIGHT_UP_POS, Transfer.FLAP_TIME_UP_COEFFICIENT)
-                ),
-                new ParallelTask(robotContext, false,
-                        robotContext.TRANSFER.new MoveLeftTask(robotContext, Transfer.LEFT_DOWN_POS, Transfer.FLAP_TIME_DOWN_COEFFICIENT),
-                        robotContext.TRANSFER.new MoveRightTask(robotContext, Transfer.RIGHT_DOWN_POS, Transfer.FLAP_TIME_DOWN_COEFFICIENT)
-                ),
-                robotContext.INTAKE.new SetIntakePower(robotContext, 1),
-                new WaitTask(robotContext, 1),
-                robotContext.INTAKE.new SetIntakePower(robotContext, 0),
-                new ParallelTask(robotContext, false,
-                        robotContext.TRANSFER.new MoveLeftTask(robotContext, Transfer.LEFT_UP_POS, Transfer.FLAP_TIME_UP_COEFFICIENT),
-                        robotContext.TRANSFER.new MoveRightTask(robotContext, Transfer.RIGHT_UP_POS, Transfer.FLAP_TIME_UP_COEFFICIENT)
-                ),
-                new ParallelTask(robotContext, false,
-                        robotContext.TRANSFER.new MoveLeftTask(robotContext, Transfer.LEFT_DOWN_POS, Transfer.FLAP_TIME_DOWN_COEFFICIENT),
-                        robotContext.TRANSFER.new MoveRightTask(robotContext, Transfer.RIGHT_DOWN_POS, Transfer.FLAP_TIME_DOWN_COEFFICIENT)
-                ),
-                robotContext.INTAKE.new SetIntakePower(robotContext, 0)
-        );
+        @Override
+        protected boolean run(RobotContext robotContext) {
+            return follower.isBusy();
+        }
     }
 }
