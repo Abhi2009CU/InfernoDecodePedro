@@ -128,7 +128,7 @@ public class MainAutonFar extends LinearOpMode {
 
             Pose currentPose = follower.getPose();
 
-            robotContext.TURRET.setRotation(Turret.calculateGoalRotation( currentPose.getX(), currentPose.getY(), currentPose.getHeading(), targetX, targetY));
+            robotContext.TURRET.setRotation(Turret.calculateGoalRotation(currentPose.getX(), currentPose.getY(), currentPose.getHeading(), targetX, targetY));
             robotContext.TURRET.updatePID();
             robotContext.SHOOTER.updatePID();
 
@@ -157,7 +157,7 @@ public class MainAutonFar extends LinearOpMode {
             preloadHeading = Math.PI-BLUE_PRELOAD_HEADING;
             firstEndpointX = 144 - BLUE_FIRST_ENDPOINT_X;
             firstEndpointY = BLUE_FIRST_ENDPOINT_Y;
-            firstEndpointHeading =Math.PI -BLUE_FIRST_ENDPOINT_HEADING;
+            firstEndpointHeading = Math.PI -BLUE_FIRST_ENDPOINT_HEADING;
         }
 
         Pose preloadPose = new Pose(preloadX, preloadY, preloadHeading);

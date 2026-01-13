@@ -16,7 +16,7 @@ import java.util.ArrayList;
 @Configurable
 public class Transfer {
     public static double FLAP_TIME_UP_COEFFICIENT = 0.17;
-    public static double FLAP_TIME_DOWN_COEFFICIENT = 0.25;
+    public static double FLAP_TIME_DOWN_COEFFICIENT = 0.4;
 
     private final Servo rightFlap;
     private final Servo leftFlap;
@@ -150,39 +150,24 @@ public class Transfer {
         }
     }
 
-    public class SendThreeTask extends QueueTask {
-
+    public class SendThreeTask extends SequentialTask {
         public SendThreeTask(MyRobot robotContext) {
-            super(robotContext);
-        }
-        @Override
-        protected void initialize(RobotContext robotContext) {
-            super.initialize(robotContext);
-            MyRobot robot = (MyRobot) robotContext;
+            super(robotContext,
+                    new MoveRightTask(robotContext, Transfer.RIGHT_UP_POS, FLAP_TIME_UP_COEFFICIENT),
+                    new MoveRightTask(robotContext, Transfer.RIGHT_DOWN_POS, FLAP_TIME_DOWN_COEFFICIENT),
 
-            // First sample - right flap
-            this.addTask(new MoveRightTask(robotContext, Transfer.RIGHT_UP_POS, FLAP_TIME_UP_COEFFICIENT));
-            this.addTask(new MoveRightTask(robotContext, Transfer.RIGHT_DOWN_POS, FLAP_TIME_DOWN_COEFFICIENT));
-
-            // Second sample - left flap
-            this.addTask(new MoveLeftTask(robotContext, Transfer.LEFT_UP_POS, FLAP_TIME_UP_COEFFICIENT));
-            this.addTask(new MoveLeftTask(robotContext, Transfer.LEFT_DOWN_POS, FLAP_TIME_DOWN_COEFFICIENT));
-
-            // Third sample - both flaps together
-            this.addTask(new ParallelTask(robotContext, true,
                     new MoveLeftTask(robotContext, Transfer.LEFT_UP_POS, FLAP_TIME_UP_COEFFICIENT),
-                    new MoveRightTask(robotContext, Transfer.RIGHT_UP_POS, FLAP_TIME_UP_COEFFICIENT)
-            ));
-            this.addTask(new WaitTask(robotContext, 0.5));
-            this.addTask(new ParallelTask(robotContext, true,
                     new MoveLeftTask(robotContext, Transfer.LEFT_DOWN_POS, FLAP_TIME_DOWN_COEFFICIENT),
-                    new MoveRightTask(robotContext, Transfer.RIGHT_DOWN_POS, FLAP_TIME_DOWN_COEFFICIENT)
-            ));
-        }
 
-        @Override
-        protected boolean run(RobotContext robotContextWrapper) {
-            return super.run(robotContextWrapper);
+                    new ParallelTask(robotContext, true,
+                            new MoveLeftTask(robotContext, Transfer.LEFT_UP_POS, FLAP_TIME_UP_COEFFICIENT),
+                            new MoveRightTask(robotContext, Transfer.RIGHT_UP_POS, FLAP_TIME_UP_COEFFICIENT)
+                    ),
+                    new ParallelTask(robotContext, true,
+                            new MoveLeftTask(robotContext, Transfer.LEFT_DOWN_POS, FLAP_TIME_DOWN_COEFFICIENT),
+                            new MoveRightTask(robotContext, Transfer.RIGHT_DOWN_POS, FLAP_TIME_DOWN_COEFFICIENT)
+                    )
+            );
         }
     }
 
