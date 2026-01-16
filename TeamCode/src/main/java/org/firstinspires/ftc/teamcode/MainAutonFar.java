@@ -199,16 +199,16 @@ public class MainAutonFar extends LinearOpMode {
 
     private void buildPathsOpen() {
         addLinePath(pathsOpen, 61, 22, 0.5 * Math.PI);
-        addBezierPathWithTangent(pathsClosed, 15, 36,
+        addBezierPathWithTangent(pathsOpen, 19, 36,
                 62, 36,
                 37, 36
         );
         addLinePathConstant(pathsOpen, 61, 22, Math.PI);
-        addBezierPathWithTangent(pathsOpen, 15, 60,
+        addBezierPathWithTangent(pathsOpen, 20, 60,
                 62, 68,
                 37, 59
         );
-        addBezierPath(pathsOpen, 15.5, 70, 0.5 * Math.PI,
+        addBezierPath(pathsOpen, 16.5, 70, 0.5 * Math.PI,
                 31, 66.5
         );
         addLinePathConstant(pathsOpen, 61, 22, Math.PI);
