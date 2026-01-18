@@ -1,36 +1,40 @@
 package org.firstinspires.ftc.teamcode.subSystems;
 
 import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.arcrobotics.ftclib.util.InterpLUT;
 import com.bylazar.configurables.annotations.Configurable;
+import com.bylazar.telemetry.TelemetryManager;
 import com.jumpypants.murphy.util.RobotContext;
 import com.jumpypants.murphy.tasks.Task;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Interplut;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.InterpLUT;
 import org.firstinspires.ftc.teamcode.MyRobot;
 
 @Configurable
 public class Shooter {
-    private final Interplut HOOD_POSITION_LUT = new Interplut();
-    private final Interplut VELOCITY_LUT = new Interplut();
+    private final InterpLUT HOOD_POSITION_LUT = new InterpLUT();
+    private final InterpLUT VELOCITY_LUT = new InterpLUT();
 
     public static double FAR_SHOOT_VEL = 0.8;
-    public static double MID_SHOOT_VEL = 0.75;
-    public static double CLOSE_SHOOT_VEL = 0.7;
+    public static double MID_SHOOT_VEL = 0.7;
+    public static double CLOSE_SHOOT_VEL = 0.68;
+
+    public static double SUPER_CLOSE_SHOOT_VEL = 0.6;
 
     public static double IDLE_VEL = 0.3;
 
     public static double FAR_SHOOT_HOOD = 0.15;
     public static double MID_SHOOT_HOOD = 0.15;
-    public static double CLOSE_SHOOT_HOOD = 0.15;
+    public static double CLOSE_SHOOT_HOOD = 0.17;
+    public static double SUPER_CLOSE_SHOOT_HOOD = 0.4;
 
-    public static double P = 0.1;
+    public static double P = 0.15;
     public static double I = 0.0;
     public static double D = 0.0;
 
-    public static double V = 1.25;
+    public static double V = 1.255;
     public static double S = 0;
 
     private Servo HOOD_SERVO;
@@ -59,26 +63,16 @@ public class Shooter {
 
         RIGHT_WHEEL.setInverted(true);
 
-
-        HOOD_POSITION_LUT.add(0, CLOSE_SHOOT_HOOD);
-
-        HOOD_POSITION_LUT.add(70, CLOSE_SHOOT_HOOD);
+        HOOD_POSITION_LUT.add(50, SUPER_CLOSE_SHOOT_HOOD);
+        HOOD_POSITION_LUT.add(60, CLOSE_SHOOT_HOOD);
         HOOD_POSITION_LUT.add(88, MID_SHOOT_HOOD);
         HOOD_POSITION_LUT.add(111, FAR_SHOOT_HOOD);
 
-        HOOD_POSITION_LUT.add(200, FAR_SHOOT_HOOD);
-
-//        HOOD_POSITION_LUT.createLUT();
-
-        VELOCITY_LUT.add(0, CLOSE_SHOOT_VEL);
-
+        VELOCITY_LUT.add(50, SUPER_CLOSE_SHOOT_VEL);
         VELOCITY_LUT.add(60, CLOSE_SHOOT_VEL);
         VELOCITY_LUT.add(88, MID_SHOOT_VEL);
         VELOCITY_LUT.add(111, FAR_SHOOT_VEL);
 
-        VELOCITY_LUT.add(200, FAR_SHOOT_VEL);
-
-//        VELOCITY_LUT.createLUT();
     }
 
     public void setVel(double vel) {
@@ -97,6 +91,10 @@ public class Shooter {
         setHoodPosition(calcHoodPos(distance));
     }
 
+    public void setHoodByDistance(double distance, TelemetryManager telemetry) {
+        setHoodPosition(calcHoodPos(distance), telemetry);
+    }
+
     public void setVelByDistance(double distance) {
         setVel(calcVelocity(distance));
     }
@@ -104,6 +102,12 @@ public class Shooter {
     public void setHoodPosition(double position) {
         position += hoodOffset;
         double clampedPosition = Math.max(HOOD_MIN_POS, Math.min(HOOD_MAX_POS, position));
+        HOOD_SERVO.setPosition(clampedPosition);
+    }
+    public void setHoodPosition(double position, TelemetryManager telemetry) {
+        position += hoodOffset;
+        double clampedPosition = Math.max(HOOD_MIN_POS, Math.min(HOOD_MAX_POS, position));
+        telemetry.debug("target hood pos", clampedPosition);
         HOOD_SERVO.setPosition(clampedPosition);
     }
 

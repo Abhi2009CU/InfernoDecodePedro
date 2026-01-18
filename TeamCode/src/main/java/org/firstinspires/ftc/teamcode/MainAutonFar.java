@@ -186,11 +186,11 @@ public class MainAutonFar extends LinearOpMode {
                 37, 36
         );
         addLinePathConstant(pathsClosed, 61, 22, Math.PI);
-        addBezierPath(pathsClosed, 23, 10.5, (double) 10/9 * Math.PI,
+        addBezierPath(pathsClosed, 20, 10.5, (double) 10/9 * Math.PI,
                 58, 9.5
         );
         addLinePath(pathsClosed, 61, 22, Math.PI);
-        addBezierPath(pathsClosed, 23, 10.5, (double) 10/9 * Math.PI,
+        addBezierPath(pathsClosed, 19, 10.5, (double) 10/9 * Math.PI,
                 58, 9.5
         );
         addLinePath(pathsClosed, 61, 22, Math.PI);
@@ -199,23 +199,26 @@ public class MainAutonFar extends LinearOpMode {
 
     private void buildPathsOpen() {
         addLinePath(pathsOpen, 61, 22, 0.5 * Math.PI);
-        addBezierPathWithTangent(pathsOpen, 19, 36,
+        addBezierPathWithTangent(pathsOpen, 14.5, 36,
                 62, 36,
                 37, 36
         );
         addLinePathConstant(pathsOpen, 61, 22, Math.PI);
-        addBezierPathWithTangent(pathsOpen, 20, 60,
-                62, 68,
-                37, 59
+        addBezierPathWithTangent(pathsOpen, 15, 59,
+                62, 67,
+                37, 58
         );
         addBezierPath(pathsOpen, 16.5, 70, 0.5 * Math.PI,
                 31, 66.5
         );
-        addLinePathConstant(pathsOpen, 61, 22, Math.PI);
+        addBezierPath(pathsOpen, 61, 22, Math.PI,
+                66, 58
+        );
         addBezierPath(pathsOpen, 23, 10.5, (double) 10/9 * Math.PI,
                 58, 9.5
         );
-        addLinePath(pathsOpen, 61, 22, Math.PI);
+        addLinePathConstant(pathsOpen, 61, 22, Math.PI);
+
         addLinePath(pathsOpen, 60, 30, Math.PI);
     }
 

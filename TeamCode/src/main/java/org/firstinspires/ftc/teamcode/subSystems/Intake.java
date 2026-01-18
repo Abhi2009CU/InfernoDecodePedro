@@ -13,7 +13,7 @@ public class Intake {
     public Intake(HardwareMap hardwareMap) {
         INTAKE_MOTOR = new Motor(hardwareMap, "Intake");
         INTAKE_MOTOR.setRunMode(Motor.RunMode.RawPower);
-        INTAKE_MOTOR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        INTAKE_MOTOR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT);
 
     }
 

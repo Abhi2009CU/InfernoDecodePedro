@@ -2,11 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 import java.util.ArrayList;
 
-public class Interplut {
+public class InterpLUT {
     private ArrayList<Double> keys;
     private ArrayList<Double> values;
 
-    public Interplut() {
+    public InterpLUT() {
         keys = new ArrayList<>();
         values = new ArrayList<>();
     }

@@ -160,7 +160,7 @@ public class MainTeleOp extends LinearOpMode {
             robotContext.SHOOTER.updatePID();
 
             double d = getDistanceToTarget();
-            robotContext.SHOOTER.setHoodByDistance(d);
+            robotContext.SHOOTER.setHoodByDistance(d, telemetryM);
 
             if (gamepad2.right_bumper) {
                 robotContext.TURRET.incrementAngleOffset(0.01);

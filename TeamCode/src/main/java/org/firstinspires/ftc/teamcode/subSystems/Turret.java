@@ -18,8 +18,8 @@ public class Turret {
 
     public static double MAX_POWER = 1.0;
     public static double MIN_POWER = -1.0;
-    public static double MAX_ANGLE = 5.0/6 * Math.PI;
-    public static double MIN_ANGLE = -5.0/6 * Math.PI;
+    public static double MAX_ANGLE = 11.0/18 * Math.PI;
+    public static double MIN_ANGLE = -11.0/18 * Math.PI;
 
     public static final double TICKS_PER_REV = 384.5;
     public static final double GEAR_RATIO = 215.0/40.0;
