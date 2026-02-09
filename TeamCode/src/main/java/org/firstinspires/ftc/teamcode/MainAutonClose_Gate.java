@@ -12,6 +12,7 @@ import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -20,6 +21,8 @@ import org.firstinspires.ftc.teamcode.subSystems.Intake;
 import org.firstinspires.ftc.teamcode.subSystems.Shooter;
 import org.firstinspires.ftc.teamcode.subSystems.Transfer;
 import org.firstinspires.ftc.teamcode.subSystems.Turret;
+
+import java.util.List;
 
 @Configurable
 @Autonomous(name="MainAutonClose-Gate", group="Main")
@@ -75,6 +78,12 @@ public class MainAutonClose_Gate extends LinearOpMode {
 
         SequentialTask mainTask = buildMainTask(paths);
 
+        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
+
         while (opModeIsActive()) {
 
             mainTask.step();
@@ -94,7 +103,7 @@ public class MainAutonClose_Gate extends LinearOpMode {
             telemetry.addLine(("Distance to target: " + d));
             telemetryM.addLine("Target Velocity: " + robotContext.SHOOTER.getTargetVelocity());
             telemetry.addLine("Current Heading" + Math.toDegrees(currentPose.getHeading()));
-            telemetryM.update();
+            //telemetryM.update();
             robotContext.SHOOTER.setHoodByDistance(d);
             robotContext.SHOOTER.setVelByDistance(d);
         }

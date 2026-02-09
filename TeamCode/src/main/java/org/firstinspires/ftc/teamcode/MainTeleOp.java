@@ -6,6 +6,7 @@ import com.bylazar.telemetry.TelemetryManager;
 import com.jumpypants.murphy.states.StateMachine;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -15,6 +16,8 @@ import org.firstinspires.ftc.teamcode.subSystems.Intake;
 import org.firstinspires.ftc.teamcode.subSystems.Shooter;
 import org.firstinspires.ftc.teamcode.subSystems.Transfer;
 import org.firstinspires.ftc.teamcode.subSystems.Turret;
+
+import java.util.List;
 
 @Configurable
 @TeleOp(name="(TELE) Main", group="Main")
@@ -148,6 +151,12 @@ public class MainTeleOp extends LinearOpMode {
 
         follower.startTeleopDrive(true);
 
+        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
+
         while (opModeIsActive()){
             stateMachine.step();
 
@@ -245,7 +254,7 @@ public class MainTeleOp extends LinearOpMode {
             telemetryM.debug("Distance from goal", d);
             telemetryM.addData("Current Velocity", robotContext.SHOOTER.getVelocity());
             telemetryM.addData("Target Velocity", robotContext.SHOOTER.getTargetVelocity());
-            telemetryM.update();
+            //telemetryM.update();
 
             telemetry.addData("Current Velocity", robotContext.SHOOTER.getVelocity());
             telemetry.addData("Target Velocity", robotContext.SHOOTER.getTargetVelocity());
@@ -261,7 +270,7 @@ public class MainTeleOp extends LinearOpMode {
             telemetryM.addData("estimated position error", Math.sqrt(Math.pow(positionError[0], 2) + Math.pow(positionError[1], 2)));
             telemetry.addData("estimated position error", Math.sqrt(Math.pow(positionError[0], 2) + Math.pow(positionError[1], 2)));
 
-            telemetry.update();
+            //telemetry.update();
         }
     }
 
