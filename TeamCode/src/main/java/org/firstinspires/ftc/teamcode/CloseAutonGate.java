@@ -11,6 +11,7 @@ import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -20,8 +21,10 @@ import org.firstinspires.ftc.teamcode.subSystems.Shooter;
 import org.firstinspires.ftc.teamcode.subSystems.Transfer;
 import org.firstinspires.ftc.teamcode.subSystems.Turret;
 
+import java.util.List;
+
 @Configurable
-@Autonomous(name="close", group="Main")
+@Autonomous(name="MainAutonClose - Normal", group="Main")
 public class CloseAutonGate extends LinearOpMode {
 
     private MyRobot robotContext;
@@ -61,7 +64,7 @@ public class CloseAutonGate extends LinearOpMode {
             telemetry.addLine("Alliance: " + alliance.name());
             telemetry.update();
         }
-        
+
         Pose startingPose = new Pose(25, 129, Math.toRadians(143));
         follower.setStartingPose(startingPose);
 
@@ -70,6 +73,12 @@ public class CloseAutonGate extends LinearOpMode {
         Paths paths = new Paths(follower);
 
         SequentialTask mainTask = buildMainTask(paths);
+
+        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
 
         while (opModeIsActive()) {
 
@@ -220,7 +229,7 @@ public class CloseAutonGate extends LinearOpMode {
                 new goToPath(paths.Path6)
         );
     }
-    
-    
-    
+
+
+
 }
