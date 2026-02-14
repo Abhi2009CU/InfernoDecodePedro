@@ -87,7 +87,7 @@ public class CloseAutonGate extends LinearOpMode {
 
             Pose currentPose = follower.getPose();
 
-            Pose target = new Pose(10, 140, Math.toRadians(0)); //basket
+            Pose target = new Pose(14, 135, Math.toRadians(0)); //basket
 
             robotContext.TURRET.setRotation(Turret.calculateGoalRotation( currentPose.getX(), currentPose.getY(), currentPose.getHeading(), target.getX(), target.getY()));
             robotContext.TURRET.updatePID();
