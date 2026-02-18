@@ -65,7 +65,7 @@ public class CloseAutonGate extends LinearOpMode {
             telemetry.update();
         }
 
-        Pose startingPose = new Pose(25, 129, Math.toRadians(143));
+        Pose startingPose = Paths.mirror(new Pose(25, 129, Math.toRadians(143)));
         follower.setStartingPose(startingPose);
 
         robotContext.TURRET.resetEncoder();
@@ -87,7 +87,7 @@ public class CloseAutonGate extends LinearOpMode {
 
             Pose currentPose = follower.getPose();
 
-            Pose target = new Pose(10, 140, Math.toRadians(0)); //basket
+            Pose target = Paths.mirror(new Pose(14, 135, Math.toRadians(0))); //basket
 
             robotContext.TURRET.setRotation(Turret.calculateGoalRotation( currentPose.getX(), currentPose.getY(), currentPose.getHeading(), target.getX(), target.getY()));
             robotContext.TURRET.updatePID();
@@ -122,7 +122,7 @@ public class CloseAutonGate extends LinearOpMode {
             Path2 = follower.pathBuilder().addPath(
                             new BezierLine(
                                     mirror(new Pose(54.535, 89.372)),
-                                    mirror(new Pose(21.000, 83.791))
+                                    mirror(new Pose(20.000, 83.791))
                             )
                     ).setLinearHeadingInterpolation(
                             mirrorHeading(Math.toRadians(180)),
