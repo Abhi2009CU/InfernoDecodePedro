@@ -94,7 +94,7 @@ public class MainAutonClose extends LinearOpMode {
 
             Pose currentPose = follower.getPose();
 
-            Pose target = Paths.mirror(new Pose(10, 140, 0));
+            Pose target = Paths.mirror(new Pose(9, 140, 0));
 
             robotContext.TURRET.setRotation(Turret.calculateGoalRotation( currentPose.getX(), currentPose.getY(), currentPose.getHeading(), target.getX(), target.getY()));
             robotContext.TURRET.updatePID();

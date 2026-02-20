@@ -16,9 +16,9 @@ import java.util.Arrays;
 
 @Configurable
 public class Shooter {
-    public static ArrayList<Double> DISTANCE_POINTS = new ArrayList<>(Arrays.asList(33.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0, 122.0, 133.0, 145.0));
+    public static ArrayList<Double> DISTANCE_POINTS = new ArrayList<>(Arrays.asList(38.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0, 122.0, 133.0, 145.0));
     public static ArrayList<Double> HOOD_ANGLE_POINTS = new ArrayList<>(Arrays.asList(0.45, 0.45, 0.4, 0.4, 0.4, 0.35, 0.3, 0.25, 0.25, 0.28, 0.36));
-    public static ArrayList<Double> VELOCITY_POINTS = new ArrayList<>(Arrays.asList(0.62, 0.62, 0.65, 0.66, 0.67, 0.67, 0.71, 0.73, 0.79, 0.83, 0.87));
+    public static ArrayList<Double> VELOCITY_POINTS = new ArrayList<>(Arrays.asList(0.62, 0.62, 0.65, 0.66, 0.67, 0.67, 0.71, 0.73, 0.79, 0.81, 0.87));
 
     public static double IDLE_VEL = 0.3;
 

@@ -56,8 +56,8 @@ public class ShootPointTest extends LinearOpMode {
 
         follower.setStartingPose(START_POSE);
 
-        double targetX = 14;
-        double targetY = 135;
+        double targetX = 9;
+        double targetY = 140;
 
         follower.update();
         follower.startTeleopDrive(true);

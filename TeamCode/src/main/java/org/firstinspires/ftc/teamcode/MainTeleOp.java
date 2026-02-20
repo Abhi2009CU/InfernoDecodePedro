@@ -53,9 +53,9 @@ public class MainTeleOp extends LinearOpMode {
     StateMachine stateMachine;
 
     public static double RED_TARGET_X = 135;
-    public static double RED_TARGET_Y = 135;
-    public static double BLUE_TARGET_X = 14;
-    public static double BLUE_TARGET_Y = 135;
+    public static double RED_TARGET_Y = 140;
+    public static double BLUE_TARGET_X = 9;
+    public static double BLUE_TARGET_Y = 140;
 
     public static double BLUE_FAR_STARTING_X = 57;
     public static double BLUE_FAR_STARTING_Y = 8.5;

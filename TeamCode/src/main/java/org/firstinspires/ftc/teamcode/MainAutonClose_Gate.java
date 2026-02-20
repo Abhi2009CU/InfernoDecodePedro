@@ -93,7 +93,7 @@ public class MainAutonClose_Gate extends LinearOpMode {
 
             Pose currentPose = follower.getPose();
 
-            Pose target = Paths.mirror(new Pose(10, 140, Math.toRadians(0))); //basket
+            Pose target = Paths.mirror(new Pose(9, 140, Math.toRadians(0))); //basket
 
             robotContext.TURRET.setRotation(Turret.calculateGoalRotation( currentPose.getX(), currentPose.getY(), currentPose.getHeading(), target.getX(), target.getY()));
             robotContext.TURRET.updatePID();

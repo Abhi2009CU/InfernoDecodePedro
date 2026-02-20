@@ -34,12 +34,10 @@ public class OddAuton extends LinearOpMode {
         BLUE
     }
     public static Alliance alliance = Alliance.BLUE;
-    public static boolean openGate = false;
 
     private final Pose START_POSE = new Pose(57, 8.5, 0.5 * Math.PI);
 
-    private final List<Path> pathsClosed = new ArrayList<>();
-    private final List<Path> pathsOpen = new ArrayList<>();
+    private final List<Path> paths = new ArrayList<>();
 
     @Override
     public void runOpMode() {
@@ -70,14 +68,7 @@ public class OddAuton extends LinearOpMode {
                 alliance = Alliance.RED;
             }
 
-            if (gamepad2.a) {
-                openGate = false;
-            } else if (gamepad2.b) {
-                openGate = true;
-            }
-
             telemetry.addLine("Alliance: " + alliance.name());
-            telemetry.addLine("Open Gate: " + (openGate ? "YES" : "NO"));
 
             telemetry.update();
         }
@@ -87,15 +78,14 @@ public class OddAuton extends LinearOpMode {
         Pose startingPose = mirrorForAlliance(START_POSE.getX(), START_POSE.getY(), START_POSE.getHeading());
         follower.setStartingPose(startingPose);
 
-        double targetX = (alliance == Alliance.BLUE) ? 14 : 135;
-        double targetY = 135;
+        double targetX = (alliance == Alliance.BLUE) ? 9 : 135;
+        double targetY = 140;
 
         follower.update();
         follower.startTeleopDrive(true);
 
-        buildPathsClosed();
+        buildPaths();
 
-        List<Path> paths = openGate ? pathsOpen : pathsClosed;
         Task mainTask = getMainTask(robotContext, follower, paths);
 
         while (opModeIsActive()){
@@ -107,7 +97,7 @@ public class OddAuton extends LinearOpMode {
             robotContext.TURRET.updatePID();
             robotContext.SHOOTER.updatePID();
 
-            double d = Math.pow(currentPose.getX() - targetX, 2) + Math.pow(currentPose.getY() - targetY, 2);
+            double d = Math.sqrt(Math.pow(currentPose.getX() - targetX, 2) + Math.pow(currentPose.getY() - targetY, 2));
             robotContext.SHOOTER.setHoodByDistance(d);
             robotContext.SHOOTER.setVelByDistance(d);
 
@@ -117,15 +107,6 @@ public class OddAuton extends LinearOpMode {
 
     @NonNull
     private Task getMainTask(MyRobot robotContext, Follower follower, List<Path> paths) {
-        if (openGate) {
-            return getOpenGateTask(robotContext, follower, paths);
-        } else {
-            return getClosedGateTask(robotContext, follower, paths);
-        }
-    }
-
-    @NonNull
-    private Task getClosedGateTask(MyRobot robotContext, Follower follower, List<Path> paths) {
         return new SequentialTask(robotContext,
                 new FollowPathTask(robotContext, follower, paths.get(0)),
                 new WaitTask(robotContext, 1),
@@ -135,38 +116,9 @@ public class OddAuton extends LinearOpMode {
         );
     }
 
-    @NonNull
-    private Task getOpenGateTask(MyRobot robotContext, Follower follower, List<Path> paths) {
-        return new SequentialTask(robotContext,
-                new FollowPathTask(robotContext, follower, paths.get(0)),
-                new WaitTask(robotContext, 1),
-                robotContext.TRANSFER.new SendThreeTask(robotContext),
-
-                robotContext.INTAKE.new SetIntakePower(robotContext, 1),
-                new FollowPathTask(robotContext, follower, paths.get(1)),
-                new FollowPathTask(robotContext, follower, paths.get(2)),
-                robotContext.TRANSFER.new SendThreeTask(robotContext),
-
-                robotContext.INTAKE.new SetIntakePower(robotContext, 1),
-                new FollowPathTask(robotContext, follower, paths.get(3)),
-                new FollowPathTask(robotContext, follower, paths.get(4)),
-                new WaitTask(robotContext, 0.3),
-                new FollowPathTask(robotContext, follower, paths.get(5)),
-                robotContext.TRANSFER.new SendThreeTask(robotContext),
-
-                robotContext.INTAKE.new SetIntakePower(robotContext, 1),
-                new FollowPathTask(robotContext, follower, paths.get(6)),
-                new WaitTask(robotContext, 0.5),
-                new FollowPathTask(robotContext, follower, paths.get(7)),
-                robotContext.TRANSFER.new SendThreeTask(robotContext),
-
-                new FollowPathTask(robotContext, follower, paths.get(8))
-        );
-    }
-
-    private void buildPathsClosed() {
-        addLinePath(pathsClosed, 61, 22, 0.5 * Math.PI);
-        addLinePath(pathsClosed,
+    private void buildPaths() {
+        addLinePath(paths, 61, 22, 0.5 * Math.PI);
+        addLinePath(paths,
                 36.326, 11, 0.5 * Math.PI
         );
     }

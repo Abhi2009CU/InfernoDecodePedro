@@ -26,6 +26,9 @@ public class Transfer {
     public Transfer(HardwareMap hardwareMap){
         rightFlap = hardwareMap.get(Servo.class, "RightFlap");
         leftFlap = hardwareMap.get(Servo.class, "LeftFlap");
+
+        rightFlap.setPosition(RIGHT_DOWN_POS);
+        leftFlap.setPosition(LEFT_DOWN_POS);
     }
 
     public void resetLeft(){

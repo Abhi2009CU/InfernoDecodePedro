@@ -35,12 +35,12 @@ public class MainAutonFar extends LinearOpMode {
         BLUE
     }
     public static Alliance alliance = Alliance.BLUE;
-    public static boolean openGate = false;
+    public static boolean bold = false;
 
     private final Pose START_POSE = new Pose(57, 8.5, 0.5 * Math.PI);
 
-    private final List<Path> pathsClosed = new ArrayList<>();
-    private final List<Path> pathsOpen = new ArrayList<>();
+    private final List<Path> pathsShy = new ArrayList<>();
+    private final List<Path> pathsBold = new ArrayList<>();
 
     @Override
     public void runOpMode() {
@@ -69,13 +69,13 @@ public class MainAutonFar extends LinearOpMode {
             }
 
             if (gamepad2.a) {
-                openGate = false;
+                bold = false;
             } else if (gamepad2.b) {
-                openGate = true;
+                bold = true;
             }
 
             telemetry.addLine("Alliance: " + alliance.name());
-            telemetry.addLine("Open Gate: " + (openGate ? "YES" : "NO"));
+            telemetry.addLine("Mode: " + (bold ? "BOLD" : "SHY"));
 
             telemetry.update();
         }
@@ -85,14 +85,14 @@ public class MainAutonFar extends LinearOpMode {
         Pose startingPose = mirrorForAlliance(START_POSE.getX(), START_POSE.getY(), START_POSE.getHeading());
         follower.setStartingPose(startingPose);
 
-        double targetX = (alliance == Alliance.BLUE) ? 14 : 135;
-        double targetY = 135;
+        double targetX = (alliance == Alliance.BLUE) ? 9 : 135;
+        double targetY = 140;
 
         follower.update();
-        buildPathsClosed();
-        buildPathsOpen();
+        buildPathsShy();
+        buildPathsBold();
 
-        List<Path> paths = openGate ? pathsOpen : pathsClosed;
+        List<Path> paths = bold ? pathsBold : pathsShy;
         Task mainTask = getMainTask(robotContext, follower, paths);
 
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
@@ -110,7 +110,7 @@ public class MainAutonFar extends LinearOpMode {
             robotContext.TURRET.updatePID();
             robotContext.SHOOTER.updatePID();
 
-            double d = Math.pow(currentPose.getX() - targetX, 2) + Math.pow(currentPose.getY() - targetY, 2);
+            double d = Math.sqrt(Math.pow(currentPose.getX() - targetX, 2) + Math.pow(currentPose.getY() - targetY, 2));
             robotContext.SHOOTER.setHoodByDistance(d);
             robotContext.SHOOTER.setVelByDistance(d);
 
@@ -120,15 +120,15 @@ public class MainAutonFar extends LinearOpMode {
 
     @NonNull
     private Task getMainTask(MyRobot robotContext, Follower follower, List<Path> paths) {
-        if (openGate) {
-            return getOpenGateTask(robotContext, follower, paths);
+        if (bold) {
+            return getBoldTask(robotContext, follower, paths);
         } else {
-            return getClosedGateTask(robotContext, follower, paths);
+            return getShyTask(robotContext, follower, paths);
         }
     }
 
     @NonNull
-    private Task getClosedGateTask(MyRobot robotContext, Follower follower, List<Path> paths) {
+    private Task getShyTask(MyRobot robotContext, Follower follower, List<Path> paths) {
         return new SequentialTask(robotContext,
                     new FollowPathTask(robotContext, follower, paths.get(0)),
                     new WaitTask(robotContext, 1),
@@ -136,18 +136,19 @@ public class MainAutonFar extends LinearOpMode {
 
                     robotContext.INTAKE.new SetIntakePower(robotContext, 1),
                     new FollowPathTask(robotContext, follower, paths.get(1)),
+                    new WaitTask(robotContext, 0.3),
                     new FollowPathTask(robotContext, follower, paths.get(2)),
                     robotContext.TRANSFER.new SendThreeTask(robotContext),
 
                     robotContext.INTAKE.new SetIntakePower(robotContext, 1),
                     new FollowPathTask(robotContext, follower, paths.get(3)),
-                    new WaitTask(robotContext, 0.5),
+                    new WaitTask(robotContext, 0.3),
                     new FollowPathTask(robotContext, follower, paths.get(4)),
                     robotContext.TRANSFER.new SendThreeTask(robotContext),
 
                     robotContext.INTAKE.new SetIntakePower(robotContext, 1),
                     new FollowPathTask(robotContext, follower, paths.get(5)),
-                    new WaitTask(robotContext, 0.5),
+                    new WaitTask(robotContext, 0.3),
                     new FollowPathTask(robotContext, follower, paths.get(6)),
                     robotContext.TRANSFER.new SendThreeTask(robotContext),
 
@@ -156,7 +157,7 @@ public class MainAutonFar extends LinearOpMode {
     }
 
     @NonNull
-    private Task getOpenGateTask(MyRobot robotContext, Follower follower, List<Path> paths) {
+    private Task getBoldTask(MyRobot robotContext, Follower follower, List<Path> paths) {
         return new SequentialTask(robotContext,
                     new FollowPathTask(robotContext, follower, paths.get(0)),
                     new WaitTask(robotContext, 1),
@@ -169,62 +170,61 @@ public class MainAutonFar extends LinearOpMode {
 
                     robotContext.INTAKE.new SetIntakePower(robotContext, 1),
                     new FollowPathTask(robotContext, follower, paths.get(3)),
-                    new FollowPathTask(robotContext, follower, paths.get(4)),
                     new WaitTask(robotContext, 0.3),
-                    new FollowPathTask(robotContext, follower, paths.get(5)),
+                    new FollowPathTask(robotContext, follower, paths.get(4)),
                     robotContext.TRANSFER.new SendThreeTask(robotContext),
 
                     robotContext.INTAKE.new SetIntakePower(robotContext, 1),
+                    new FollowPathTask(robotContext, follower, paths.get(5)),
+                    new WaitTask(robotContext, 0.3),
                     new FollowPathTask(robotContext, follower, paths.get(6)),
-                    new WaitTask(robotContext, 0.5),
-                    new FollowPathTask(robotContext, follower, paths.get(7)),
                     robotContext.TRANSFER.new SendThreeTask(robotContext),
 
-                    new FollowPathTask(robotContext, follower, paths.get(8))
+                    new FollowPathTask(robotContext, follower, paths.get(7))
         );
     }
 
-    private void buildPathsClosed() {
-        addLinePath(pathsClosed, 61, 22, 0.5 * Math.PI);
-        addBezierPathWithTangent(pathsClosed, 15, 36,
-                62, 36,
-                37, 36
-        );
-        addLinePathConstant(pathsClosed, 61, 22, Math.PI);
-        addBezierPath(pathsClosed, 20, 10.5, (double) 10/9 * Math.PI,
+    private void buildPathsShy() {
+        addLinePath(pathsShy, 61, 22, 0.5 * Math.PI);
+
+        addBezierPath(pathsShy, 14.5, 10.5, (double) 10/9 * Math.PI,
                 58, 9.5
         );
-        addLinePath(pathsClosed, 61, 22, Math.PI);
-        addBezierPath(pathsClosed, 19, 10.5, (double) 10/9 * Math.PI,
+        addLinePathConstant(pathsShy, 61, 22, Math.PI);
+
+        addBezierPath(pathsShy, 20, 10.5, (double) 10/9 * Math.PI,
                 58, 9.5
         );
-        addLinePath(pathsClosed, 61, 22, Math.PI);
-        addLinePath(pathsClosed, 60, 30, Math.PI);
+        addLinePath(pathsShy, 61, 22, Math.PI);
+
+        addBezierPath(pathsShy, 19, 10.5, (double) 10/9 * Math.PI,
+                58, 9.5
+        );
+        addLinePath(pathsShy, 61, 22, Math.PI);
+
+        addLinePath(pathsShy, 60, 30, Math.PI);
     }
 
-    private void buildPathsOpen() {
-        addLinePath(pathsOpen, 61, 22, 0.5 * Math.PI);
-        addBezierPathWithTangent(pathsOpen, 14.5, 36,
+    private void buildPathsBold() {
+        addLinePath(pathsBold, 61, 22, 0.5 * Math.PI);
+
+        addBezierPathWithTangent(pathsBold, 14.5, 36,
                 62, 36,
                 37, 36
         );
-        addLinePathConstant(pathsOpen, 61, 22, Math.PI);
-        addBezierPathWithTangent(pathsOpen, 15, 59,
-                62, 67,
-                37, 58
-        );
-        addBezierPath(pathsOpen, 16.5, 70, 0.5 * Math.PI,
-                31, 66.5
-        );
-        addBezierPath(pathsOpen, 61, 22, Math.PI,
-                66, 58
-        );
-        addBezierPath(pathsOpen, 23, 10.5, (double) 10/9 * Math.PI,
+        addLinePathConstant(pathsBold, 61, 22, Math.PI);
+
+        addBezierPath(pathsBold, 20, 10.5, (double) 10/9 * Math.PI,
                 58, 9.5
         );
-        addLinePathConstant(pathsOpen, 61, 22, Math.PI);
+        addLinePath(pathsBold, 61, 22, Math.PI);
 
-        addLinePath(pathsOpen, 60, 30, Math.PI);
+        addBezierPath(pathsBold, 14.5, 10.5, (double) 10/9 * Math.PI,
+                58, 9.5
+        );
+        addLinePath(pathsBold, 61, 22, Math.PI);
+
+        addLinePath(pathsBold, 60, 30, Math.PI);
     }
 
     private Pose mirrorForAlliance(double x, double y, double heading) {
