@@ -13,7 +13,6 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.MyRobot;
@@ -27,9 +26,8 @@ import java.util.List;
 
 
 @Configurable
-@Disabled
-@Autonomous(name="MainAutonClose", group="Main")
-public class MainAutonClose extends LinearOpMode {
+@Autonomous(name="ShyCloseAuton", group="Main")
+public class ShyCloseAuton extends LinearOpMode {
 
     public enum Alliance {
         RED,
